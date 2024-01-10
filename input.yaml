@@ -1,0 +1,48 @@
+html:
+  - head: 
+    - title: YACHT example
+    - style: # style content is interpreted as CSS selectors and attributes
+        - body:
+            - background: yellow
+            - background: linear-gradient(90deg, rgba(58,180,149,1) 0%, rgba(253,211,29,1) 50%, rgba(252,89,69,1) 100%) 
+        - "#welcome": "color: #f00050;"
+        - .centered:
+          - position: absolute
+          - left: 50%
+          - top: 50%
+          - transform: translate(-50%, -50%)
+          - padding: 20px
+        - table#example, tr, td, th:
+          - border: solid 2px black
+
+  - body:
+    - main:
+      - h1: Hello, this is a YACHT example
+        id: welcome # attributes are passed after content of the tag
+      - p: >-
+          This is an example
+          of a multiline paragraph
+          without newlines
+      - p: |-
+          This is an example
+          of a multiline paragraph
+          with newlines
+      - h2: Fruit list
+      - ul:
+        - li: apple
+        - li: banana
+        - li: strawberry
+      - h3: A table
+      - table:
+        - tr: 
+          - th: Header 1
+          - th: Header 2
+        - tr: 
+          - td: Cell 1
+          - td: Cell 2
+        id: example
+      - script: |-
+          console.log("Hello, scripts also work!");
+          console.log("These lines will not get <br/> inside");
+      class: centered
+      style: "background: #f0f0f066"
