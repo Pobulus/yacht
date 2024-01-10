@@ -4,16 +4,13 @@
 
 <html>
     <head>    
-        <title>YACHT example</title>
-    
+        <title>YACHT example</title>    
         <style>
             body {
                 background: yellow;
                 background: linear-gradient(90deg, rgba(58,180,149,1) 0%, rgba(253,211,29,1) 50%, rgba(252,89,69,1) 100%);
             }
-
             #welcome { color: #f00050; }
-
             .centered {
                 position: absolute;
                 left: 50%;
@@ -21,51 +18,37 @@
                 transform: translate(-50%, -50%);
                 padding: 20px;
             }
-
             table#example, tr, td, th {
                 border: solid 2px black;
             }
         </style>
     </head>
-
     <body>    
         <main class="centered" style="background: #f0f0f066">        
-            <h1 id="welcome">Hello, this is a YACHT example</h1>
-        
-            <p>This is an example of a multiline paragraph without newlines</p>
-        
+            <h1 id="welcome">Hello, this is a YACHT example</h1>        
+            <p>This is an example of a multiline paragraph without newlines</p>        
             <p>
 This is an example<br />
 of a multiline paragraph<br />
 with newlines
-            </p>
-        
-            <h2>Fruit list</h2>
-        
+            </p>        
+            <h2>Fruit list</h2>        
             <ul>            
-                <li>apple</li>
-            
-                <li>banana</li>
-            
+                <li>apple</li>            
+                <li>banana</li>            
                 <li>strawberry</li>
-            </ul>
-        
-            <h3>A table</h3>
-        
+            </ul>        
+            <h3>A table</h3>        
             <table id="example">            
                 <tr>                
-                    <th>Header 1</th>
-                
+                    <th>Header 1</th>                
                     <th>Header 2</th>
-                </tr>
-            
+                </tr>            
                 <tr>                
-                    <td>Cell 1</td>
-                
+                    <td>Cell 1</td>                
                     <td>Cell 2</td>
                 </tr>
-            </table>
-        
+            </table>        
             <script>
 console.log("Hello, scripts also work!");
 console.log("These lines will not get <br/> inside");

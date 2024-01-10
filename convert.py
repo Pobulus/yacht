@@ -34,11 +34,11 @@ def parseHTMLObj(obj, indent):
             return output
         elif(tag == "style"):
             for child in content:
-                output += f"{parseCSSObj(child, indent+indentSpaces)}\n"
+                output += f"{parseCSSObj(child, indent+indentSpaces)}"
         else: 
             for child in content:
-                output += f"{' '*indent}{parseHTMLObj(child, indent+indentSpaces)}\n"
-    output += f"{' '*indent}</{tag}>"
+                output += f"{' '*indent}{parseHTMLObj(child, indent+indentSpaces)}"
+    output += f"\n{' '*indent}</{tag}>"
     return output
 
 def parseCSSObj(obj, indent):
@@ -71,7 +71,7 @@ with open("input.yaml", 'r') as file:
 
     if(next(iter(data))=="html"):
         print("<!DOCTYPE html>")
-    print("<!-- Created using YAML2HTML -->")
-    print("<!-- Have a very cursed day! -->")
+    print("<!--  Created using YACHT -->")
+    print("<!-- Have a very nice day! -->")
     print(parseHTMLObj(data, 0))
 
