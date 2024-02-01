@@ -1,4 +1,5 @@
 from yaml import load
+import sys
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
@@ -65,13 +66,14 @@ def parseCSSObj(obj, indent):
     output += f"{' '*indent}{'}'}"
     return output
 
+if __name__ == "__main__":
+    filename = sys.argv[1] if len(sys.argv)>1 else "input.yaml" 
+    with open(filename, 'r') as file:
+        data = load(file, Loader=Loader)
 
-with open("input.yaml", 'r') as file:
-    data = load(file, Loader=Loader)
-
-    if(next(iter(data))=="html"):
-        print("<!DOCTYPE html>")
-    print("<!--  Created using YACHT -->")
-    print("<!-- Have a very nice day! -->")
-    print(parseHTMLObj(data, 0))
+        if(next(iter(data))=="html"):
+            print("<!DOCTYPE html>")
+        print("<!--  Created using YACHT -->")
+        print("<!-- Have a very nice day! -->")
+        print(parseHTMLObj(data, 0))
 
