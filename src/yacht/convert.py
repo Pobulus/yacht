@@ -1,16 +1,42 @@
 from yaml import load
-import sys
+import sys, re, ast
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
     from yaml import Loader, Dumper
 
+
 indentSpaces = 4
+eval_enabled = False
+
+def evaluateExpression(expression):
+    try:
+        return str(eval(expression.group(1))) 
+    except (SyntaxError, TypeError):
+        return expression.group(0)
+    
+def generateHTML(obj, indent):
+
+    repeat = obj.get("repeat", 1)
+    
+    index = obj.get("index", "$index")
+   
+    output = ""
+    for i in range(repeat):
+        for child in obj["generate"]:
+            output += f"{' '*indent}{parseHTMLObj(child, indent+indentSpaces)}".replace(index, str(i))
+    name = obj.get("name")
+    if name is not None:
+        output = f"\n{' '*indent}<-- { name or 'generated segment' } -->${output}\n{' '*indent}<-- end of {name or 'generated segment' } -->"
+    return output
+
 
 def parseHTMLObj(obj, indent):
     output = ""
     objIterator = iter(obj)
     tag = next(objIterator) # get first key as tag name
+    if(tag == "generate"):
+        return generateHTML(obj, indent)
     output += f"\n{' '*indent}<{tag}"
     # following keys as attributes
     attributes = []
@@ -36,6 +62,7 @@ def parseHTMLObj(obj, indent):
         elif(tag == "style"):
             for child in content:
                 output += f"{parseCSSObj(child, indent+indentSpaces)}"
+            
         else: 
             for child in content:
                 output += f"{' '*indent}{parseHTMLObj(child, indent+indentSpaces)}"
@@ -75,5 +102,7 @@ if __name__ == "__main__":
             print("<!DOCTYPE html>")
         print("<!--  Created using YACHT -->")
         print("<!-- Have a very nice day! -->")
-        print(parseHTMLObj(data, 0))
-
+        output = parseHTMLObj(data, 0)
+        if(eval_enabled):
+            output = re.sub(r"(?:\${)(.+?)(?<!\\)(?:}\$)",evaluateExpression, output)
+        print(output)
