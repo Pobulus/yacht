@@ -69,10 +69,24 @@ def parseHTMLObj(obj, indent):
     output += f"\n{' '*indent}</{tag}>"
     return output
 
+def parseCSSRule(obj, indent):
+    output = ""
+    objIterator = iter(obj)
+    rule = next(objIterator) # get first key as tag name
+    output += f"\n{' '*indent}{rule} {'{'}"
+    selectors = obj[rule]
+    if selectors is not None:
+        for selector in selectors:
+            output += f"{parseCSSObj(selector, indent+indentSpaces)}"
+    output += f"\n{' '*indent}{'}'}"
+    return output
+
 def parseCSSObj(obj, indent):
     output = ""
     objIterator = iter(obj)
     selector = next(objIterator) # get first key as tag name
+    if selector[0]=="@":
+        return parseCSSRule(obj, indent)
     output += f"\n{' '*indent}{selector} {'{'}"
     content = obj[selector]
     if content is None:
