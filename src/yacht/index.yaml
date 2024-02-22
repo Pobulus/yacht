@@ -1,0 +1,61 @@
+# this is the generic welcome page for yacht.sail
+html:
+  - head:
+      - title: Welcome aboard!
+      - meta:
+        content: text/html;charset=utf-8
+        http-equiv: Content-Type
+      - meta:
+        content: utf-8
+        http-equiv: encoding
+      - style:
+          - a:
+            - text-decoration: none
+          - body:
+              - background: rgb(10,10,25)
+              - font-family: monospace
+          - .gradient:
+              - background-color: rgb(117,0,186)
+              - background: linear-gradient(54deg, rgba(201,109,255,1) 0%, rgba(132,123,222,1) 45%, rgba(88,157,255,1) 100%)
+              - -webkit-background-clip: text
+              - -webkit-text-fill-color: transparent
+              - color: transparent
+          - .centered:hover:
+              - filter: hue-rotate(120deg)
+              - transition: filter 1s
+              
+          - .centered:
+              - grid-template-columns: 1fr
+              - grid-auto-flow: row dense
+              - display: grid
+              - grid-row-gap: 0px
+              - position: absolute
+              - left: 50%
+              - top: 50%
+              - transform: translate(-50%, -50%)
+              - filter: hue-rotate(-30deg)
+              - transition: filter 2.5s
+              
+              
+          - "#title":
+              - font-size: 100px
+          - "#subtitle":
+              - font-size: 20px
+              - text-align: right
+          - "@media only screen and (orientation: portrait) and (max-width: 600px)":
+              - "#title":
+                  - font-size: 50px
+              - "#subtitle":
+                  - font-size: 10px
+  - body:
+      - a:
+          - b: 'yacht⛵'
+            id: title
+            class: gradient
+
+          - i: "Welcome aboard!"
+            id: subtitle
+            class: gradient
+        class: centered
+        id: title-bg
+        href: https://github.com/Pobulus/yacht

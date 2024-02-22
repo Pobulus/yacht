@@ -110,16 +110,24 @@ def parseCSSObj(obj, indent):
     output += f"{' '*indent}{'}'}"
     return output
 
-if __name__ == "__main__":
-    filename = sys.argv[1] if len(sys.argv)>1 else "input.yaml" 
-    with open(filename, 'r') as file:
+
+def convertFile(filename):
+    output = ""
+    with open(filename, 'rt', encoding='utf8') as file:
         data = load(file, Loader=Loader)
 
         if(next(iter(data))=="html"):
-            print("<!DOCTYPE html>")
-        print("<!--  Created using YACHT -->")
-        print("<!-- Have a very nice day! -->")
-        output = parseHTMLObj(data, 0)
+            output += "<!DOCTYPE html>\n"
+        output += "<!--  Created using YACHT -->\n"
+        output += "<!-- Have a very nice day! -->\n"
+        output += parseHTMLObj(data, 0)
         if(eval_enabled):
             output = re.sub(r"(?:\${)(.+?)(?<!\\)(?:}\$)",evaluateExpression, output)
-        print(output)
+        
+    return output;
+
+
+if __name__ == "__main__":
+    filename = sys.argv[1] if len(sys.argv)>1 else "input.yaml" 
+    convertFile(filename)
+    
