@@ -1,10 +1,13 @@
-from yaml import load
 import sys, re, ast
+try:
+    from yaml import load
+except ImportError:
+    raise RuntimeError("Looks like you haven't installed PyYAML yet")
+   
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
     from yaml import Loader, Dumper
-
 
 indentSpaces = 4
 eval_enabled = False
