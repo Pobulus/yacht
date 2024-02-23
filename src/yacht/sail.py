@@ -1,23 +1,37 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import time, sys
-from yacht.convert import convertFile
+import time, sys, re
+from convert import convertFile
 
 def createYachtServer(rootPath):
     class YachtServer(BaseHTTPRequestHandler):
+        def detectContentType(self, path):
+            ext = re.search(f"\.([^.]+)$", path).group(1)
+            print(ext)
+            match ext:
+                case "yaml" | "yml" | "html" | "htm":
+                    return "text/html"
+                case "css"|"yass":
+                    return "text/css"
+                case "js":
+                    return "text/javascript"
+                case _: 
+                    return "text/plain"
+
         def do_GET(self):
             
             path = rootPath+self.path;
             if path[-1] == '/':
                 path += 'index.yaml'
-            print(path)
-
+            print(f"serving file {path}")
+            
             try:
-                print("serving file ")
-                document = convertFile(path)
+                document = convertFile(path) if re.search(r"\.ya..?$", path) else open(path).read()
                 self.send_response(200)
-                self.send_header("Content-type", "text/html")
+                self.send_header("Content-type", self.detectContentType(path))
                 self.end_headers()
                 self.wfile.write(bytes(document, "utf-8"))
+
+                
 
             except FileNotFoundError:
                 print('File does not exist')

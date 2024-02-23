@@ -32,6 +32,9 @@ html:
         - li: apple
         - li: banana
         - li: strawberry
+        - li:
+            - a: This is a test
+              href: test.yaml
       - h3: A table
       - table:
         - tr: 

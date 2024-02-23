@@ -12,6 +12,24 @@ except ImportError:
 indentSpaces = 4
 eval_enabled = False
 
+emptyElementTags = [
+    "area",
+    "base",
+    "br",
+    "col",
+    "embed",
+    "hr",
+    "img",
+    "input",
+    "keygen",
+    "link",
+    "meta",
+    "param",
+    "source",
+    "track",
+    "wbr"
+]
+
 def evaluateExpression(expression):
     try:
         return str(eval(expression.group(1))) 
@@ -47,6 +65,9 @@ def parseHTMLObj(obj, indent):
     while attrTemp is not None:
         output += f" {attrTemp}=\"{obj[attrTemp]}\""
         attrTemp = next(objIterator, None)
+    if tag in emptyElementTags:
+        output += " />"
+        return output;
 
     output += ">"
     content = obj[tag]
@@ -111,17 +132,27 @@ def parseCSSObj(obj, indent):
     return output
 
 
-def convertFile(filename):
+def convertFile(filename, indent=0):
     output = ""
+    print("new ONE")
     with open(filename, 'rt', encoding='utf8') as file:
         data = load(file, Loader=Loader)
-
-        if(next(iter(data))=="html"):
+        root = next(iter(data))
+        if(root == "html"):
             output += "<!DOCTYPE html>\n"
-        output += "<!--  Created using YACHT -->\n"
-        output += "<!-- Have a very nice day! -->\n"
-        output += parseHTMLObj(data, 0)
-        if(eval_enabled):
+            output += "<!--  Created using YACHT -->\n"
+            output += "<!-- Have a very nice day! -->\n"
+            output += parseHTMLObj(data, indent)
+        elif(root == "style"):
+            output += "/*  Created using YACHT */\n"
+            output += "/* Have a very nice day! */\n"
+            for child in data["style"]:
+                output += f"{parseCSSObj(child, indent)}"
+            
+        else:
+            output += parseCSSObj(data, indent)
+        # this one will be deprecated, once anchors are introduced
+        if(eval_enabled): 
             output = re.sub(r"(?:\${)(.+?)(?<!\\)(?:}\$)",evaluateExpression, output)
         
     return output;
@@ -129,5 +160,5 @@ def convertFile(filename):
 
 if __name__ == "__main__":
     filename = sys.argv[1] if len(sys.argv)>1 else "input.yaml" 
-    convertFile(filename)
+    print(convertFile(filename))
     
