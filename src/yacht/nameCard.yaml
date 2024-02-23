@@ -1,0 +1,20 @@
+div:
+  - style: 
+      - '#nameCard':
+        - max-width: 300px
+        - transform: rotate(-5deg)
+        - background: $bg
+        - color: $fg
+        - padding: 5px
+        - transition: transform 0.5s
+      - '#nameCard:hover':        
+        - transform: rotate(5deg)
+        - transition: transform 1s
+  - div:
+    - h1: $name $surname 
+    - p: |
+        Witaj! 
+        to jest kartka dla $name
+        o nazwisku $surname
+onclick: alert('$name')
+id: nameCard

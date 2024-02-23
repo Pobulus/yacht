@@ -25,7 +25,7 @@ def createYachtServer(rootPath):
             print(f"serving file {path}")
             
             try:
-                document = convertFile(path) if re.search(r"\.ya..?$", path) else open(path).read()
+                document = convertFile(path,0,[]) if re.search(r"\.ya..?$", path) else open(path).read()
                 self.send_response(200)
                 self.send_header("Content-type", self.detectContentType(path))
                 self.end_headers()

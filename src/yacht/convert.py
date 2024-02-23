@@ -10,6 +10,7 @@ except ImportError:
     from yaml import Loader, Dumper
 
 indentSpaces = 4
+__uniqueTugCounter = 0
 eval_enabled = False
 
 emptyElementTags = [
@@ -30,13 +31,8 @@ emptyElementTags = [
     "wbr"
 ]
 
-def evaluateExpression(expression):
-    try:
-        return str(eval(expression.group(1))) 
-    except (SyntaxError, TypeError):
-        return expression.group(0)
     
-def generateHTML(obj, indent):
+def craftHTML(obj, indent):
 
     repeat = obj.get("repeat", 1)
     
@@ -44,20 +40,38 @@ def generateHTML(obj, indent):
    
     output = ""
     for i in range(repeat):
-        for child in obj["generate"]:
+        for child in obj["craft"]:
             output += f"{' '*indent}{parseHTMLObj(child, indent+indentSpaces)}".replace(index, str(i))
     name = obj.get("name")
     if name is not None:
-        output = f"\n{' '*indent}<-- { name or 'generated segment' } -->${output}\n{' '*indent}<-- end of {name or 'generated segment' } -->"
+        output = f"\n{' '*indent}<-- { name or 'crafted segment' } -->${output}\n{' '*indent}<-- end of {name or 'crafted segment' } -->"
     return output
 
+def tugFile(obj, indent, tugStack):
+    global __uniqueTugCounter
+    objIterator = iter(obj)
+    next(objIterator)
+    try:
+        output = convertFile(obj["tug"], indent+indentSpaces, tugStack)
+    except FileNotFoundError:
+        return errorElement(f"file {obj[tag]} was not found")
+    token = next(objIterator, None)
+    while token is not None:
+        output = output.replace(f"${token}", obj[token])
+        token = next(objIterator, None)
+    output = output.replace(f" id=\"", f" id=\"tug{__uniqueTugCounter}_")
+    output = re.sub(r"#(.+) {", fr"#tug{__uniqueTugCounter}_\1 {{", output)
+    __uniqueTugCounter += 1
+    return output
 
-def parseHTMLObj(obj, indent):
+def parseHTMLObj(obj, indent, tugStack=[]):
     output = ""
     objIterator = iter(obj)
     tag = next(objIterator) # get first key as tag name
-    if(tag == "generate"):
-        return generateHTML(obj, indent)
+    if(tag == "craft"):
+        return craftHTML(obj, indent)
+    elif(tag == "tug"):
+        return tugFile(obj, indent, tugStack)
     output += f"\n{' '*indent}<{tag}"
     # following keys as attributes
     attributes = []
@@ -89,7 +103,7 @@ def parseHTMLObj(obj, indent):
             
         else: 
             for child in content:
-                output += f"{' '*indent}{parseHTMLObj(child, indent+indentSpaces)}"
+                output += f"{' '*indent}{parseHTMLObj(child, indent+indentSpaces, tugStack)}"
     output += f"\n{' '*indent}</{tag}>"
     return output
 
@@ -131,30 +145,40 @@ def parseCSSObj(obj, indent):
     output += f"{' '*indent}{'}'}"
     return output
 
+def errorElement(message):
+    return f"<b style=\"color:red\">Error:{message}</b>"
 
-def convertFile(filename, indent=0):
+def convertFile(filename, indent=0, tugStack=[]):
     output = ""
-    print("new ONE")
+    print(f"converting file {filename}")
     with open(filename, 'rt', encoding='utf8') as file:
         data = load(file, Loader=Loader)
         root = next(iter(data))
-        if(root == "html"):
-            output += "<!DOCTYPE html>\n"
-            output += "<!--  Created using YACHT -->\n"
-            output += "<!-- Have a very nice day! -->\n"
-            output += parseHTMLObj(data, indent)
-        elif(root == "style"):
-            output += "/*  Created using YACHT */\n"
-            output += "/* Have a very nice day! */\n"
-            for child in data["style"]:
-                output += f"{parseCSSObj(child, indent)}"
-            
-        else:
-            output += parseCSSObj(data, indent)
-        # this one will be deprecated, once anchors are introduced
-        if(eval_enabled): 
-            output = re.sub(r"(?:\${)(.+?)(?<!\\)(?:}\$)",evaluateExpression, output)
         
+        if filename in tugStack:
+            return errorElement(f"tugging {filename} from {tugStack[-1]} would cause recursion")
+        
+        if not tugStack:
+            uniqueCounter = 0
+            if(root == "html"):
+                output += "<!DOCTYPE html>\n"
+                output += "<!--  Created using YACHT -->\n"
+                output += "<!-- Have a very nice day! -->\n"
+                tugStack.append(filename)
+                output += parseHTMLObj(data, indent, tugStack)
+            elif(root == "style" and not len(tugStack)):
+                output += "/*  Created using YACHT */\n"
+                output += "/* Have a very nice day! */\n"
+                tugStack.append(filename)
+                for child in data["style"]:
+                    output += f"{parseCSSObj(child, indent)}"
+            
+        elif(root == "html"):
+            return errorElement("tugged pages cannot start with html")
+        else:
+            tugStack.append(filename)
+            output += parseHTMLObj(data, indent, tugStack)
+        tugStack.pop()    
     return output;
 
 

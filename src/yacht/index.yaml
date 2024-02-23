@@ -13,6 +13,22 @@ html:
         href: style.yass
 
   - body:
+      - tug: nameCard.yaml
+        name: Tosia
+        surname: Chmielewska
+        bg: darkblue
+        fg: lime
+      - tug: nameCard.yaml
+        name: Ksiądz
+        surname: Robak
+        bg: white
+        fg: black
+      - tug: nameCard.yaml
+        name: Jacek
+        surname: Soplica
+        fg: orange
+        bg: maroon
+
       - a:
           - b: 'yacht⛵'
             id: title
