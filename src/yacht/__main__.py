@@ -1,7 +1,7 @@
 import sys
 from help import describe
-from sail import startServer
-from convert import convertFile
+from yacht.sail import startServer
+from yacht.convert import convertFile
 welcomeMessage = """
 === Welcome aboard the yacht! ⛵ ===
 

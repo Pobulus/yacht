@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import time, sys
-from convert import convertFile
+from yacht.convert import convertFile
 
 def createYachtServer(rootPath):
     class YachtServer(BaseHTTPRequestHandler):
