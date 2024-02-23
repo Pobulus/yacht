@@ -1,5 +1,5 @@
 import sys
-from help import describe
+from yacht.help import describe
 from yacht.sail import startServer
 from yacht.convert import convertFile
 welcomeMessage = """
