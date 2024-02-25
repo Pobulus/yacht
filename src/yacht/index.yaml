@@ -8,11 +8,10 @@ html:
       - meta:
         content: utf-8
         http-equiv: encoding
-      - link:
-        rel: stylesheet
-        href: style.yass
+      - style: style.yass
 
   - body:
+      - script: anchors.js
       - tug: nameCard.yaml
         name: Tosia
         surname: Chmielewska
@@ -33,6 +32,12 @@ html:
           - b: 'yacht⛵'
             id: title
             class: gradient
+            anchors:
+              - bind: test
+                poll: no
+                onClick: no
+                arguments:
+                
 
           - i: "Welcome aboard!"
             id: subtitle

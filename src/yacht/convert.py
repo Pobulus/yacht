@@ -68,10 +68,17 @@ def parseHTMLObj(obj, indent, tugStack=[]):
     output = ""
     objIterator = iter(obj)
     tag = next(objIterator) # get first key as tag name
+    content = obj[tag]
     if(tag == "craft"):
         return craftHTML(obj, indent)
     elif(tag == "tug"):
         return tugFile(obj, indent, tugStack)
+    elif(tag=="script"):
+        if(type(content) == str and not '\n' in content):
+            return f"\n{' '*indent}<script src=\"{content}\"></script>"
+    elif(tag=="style"):
+        if(type(content) == str and not '\n' in content):
+            return f"\n{' '*indent}<link rel=\"stylesheet\" href=\"{content}\" />"
     output += f"\n{' '*indent}<{tag}"
     # following keys as attributes
     attributes = []
@@ -84,7 +91,7 @@ def parseHTMLObj(obj, indent, tugStack=[]):
         return output;
 
     output += ">"
-    content = obj[tag]
+    
     if content is None:
         output += f"</{tag}>"
         return output
