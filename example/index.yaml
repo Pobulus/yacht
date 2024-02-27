@@ -9,12 +9,11 @@ html:
         content: utf-8
         http-equiv: encoding
       - style: style.yass
-
   - body:
       - script: anchors.js
       - tug: nameCard.yaml
-        name: Tosia
-        surname: Chmielewska
+        name: Test
+        surname: Testy
         bg: darkblue
         fg: lime
       - tug: nameCard.yaml
@@ -22,26 +21,34 @@ html:
         surname: Robak
         bg: white
         fg: black
-      - tug: nameCard.yaml
-        name: Jacek
-        surname: Soplica
-        fg: orange
-        bg: maroon
-
+      - div:
+        - tug: nameCard.yaml
+          name: Jacek
+          surname: Soplica
+          fg: orange
+          bg: maroon
       - a:
+          - b: clickme!
+            class: gradient
+            anchors:
+              - bind: anchors/time
+                trigger: onclick
+                target: innerText
+                arguments:
+                  format: 'Today is %d-%m-%y'
           - b: 'yacht⛵'
             id: title
             class: gradient
-            anchors:
-              - bind: test
-                poll: no
-                onClick: no
-                arguments:
-                
-
           - i: "Welcome aboard!"
             id: subtitle
             class: gradient
+            anchors:
+                - bind: anchors/time
+                  poll: yes
+                  trigger: onclick
+                  target: innerHTML
+                  arguments:
+                    format: '%H:%m:%S'
         class: centered
         id: title-bg
-        href: https://github.com/Pobulus/yacht
+        # href: https://github.com/Pobulus/yacht

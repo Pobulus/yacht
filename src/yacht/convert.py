@@ -1,4 +1,4 @@
-import sys, re, ast
+import sys, re, uuid
 try:
     from yaml import load
 except ImportError:
@@ -10,7 +10,7 @@ except ImportError:
     from yaml import Loader, Dumper
 
 indentSpaces = 4
-__uniqueTugCounter = 0
+
 eval_enabled = False
 
 emptyElementTags = [
@@ -31,6 +31,8 @@ emptyElementTags = [
     "wbr"
 ]
 
+def uniqueID(prefix):
+    return prefix+str(uuid.uuid4())[0:7]
     
 def craftHTML(obj, indent):
 
@@ -48,7 +50,8 @@ def craftHTML(obj, indent):
     return output
 
 def tugFile(obj, indent, tugStack):
-    global __uniqueTugCounter
+    
+    tugID = uniqueID("tug")
     objIterator = iter(obj)
     next(objIterator)
     try:
@@ -59,11 +62,22 @@ def tugFile(obj, indent, tugStack):
     while token is not None:
         output = output.replace(f"${token}", obj[token])
         token = next(objIterator, None)
-    output = output.replace(f" id=\"", f" id=\"tug{__uniqueTugCounter}_")
-    output = re.sub(r"#(.+) {", fr"#tug{__uniqueTugCounter}_\1 {{", output)
-    __uniqueTugCounter += 1
+    output = output.replace(f" id=\"", f" id=\"{tugID}_")
+    output = re.sub(r"#(.+) {", fr"#{tugID}_\1 {{", output)
+    
     return output
-
+def parseAnchor(obj, indent, id):
+    output = ""
+    if obj is not None:
+        print(obj)
+        for anchor in obj:
+    # bindAnchor(id, name, args, target, isPolling)
+            arguments = str(anchor.get('arguments', "null")).replace("'", '"')
+            target = anchor.get('target', "")
+            poll = 'true' if anchor.get('poll', False) else 'false'
+            trigger = anchor.get('trigger', "")
+            output += f"\n{' '*indent}<script>harbour.bindAnchor(\"{id}\", \"{anchor['bind']}\", {arguments}, \"{target}\", {poll}, \"{trigger}\" );</script>"
+    return output
 def parseHTMLObj(obj, indent, tugStack=[]):
     output = ""
     objIterator = iter(obj)
@@ -82,18 +96,32 @@ def parseHTMLObj(obj, indent, tugStack=[]):
     output += f"\n{' '*indent}<{tag}"
     # following keys as attributes
     attributes = []
+    anchors = None
+    anchorsID = ""
+    if "anchors" in obj.keys():
+            anchors = obj['anchors']
+            anchorsID = obj.get("id", uniqueID("anchor"))
+            obj["id"] = anchorsID
+            objIterator = iter(obj) # recreate the iterator after modifying obj
+            next(objIterator) # skip first key
+            
+
     attrTemp = next(objIterator, None)
+
     while attrTemp is not None:
         output += f" {attrTemp}=\"{obj[attrTemp]}\""
         attrTemp = next(objIterator, None)
+    print(anchors)
     if tag in emptyElementTags:
         output += " />"
+        output += parseAnchor(anchors, indent, anchorsID)
         return output;
-
+    
     output += ">"
     
     if content is None:
         output += f"</{tag}>"
+        output += parseAnchor(anchors, indent, anchorsID)
         return output
     else:
         if(type(content)==str):  
@@ -103,6 +131,7 @@ def parseHTMLObj(obj, indent, tugStack=[]):
                 output += f"\n{content}\n{' '*indent}</{tag}>"
             else:
                 output += f"{content}</{tag}>"
+            output += parseAnchor(anchors, indent, anchorsID)
             return output
         elif(tag == "style"):
             for child in content:
@@ -112,6 +141,7 @@ def parseHTMLObj(obj, indent, tugStack=[]):
             for child in content:
                 output += f"{' '*indent}{parseHTMLObj(child, indent+indentSpaces, tugStack)}"
     output += f"\n{' '*indent}</{tag}>"
+    output += parseAnchor(anchors, indent, anchorsID)
     return output
 
 def parseCSSRule(obj, indent):
@@ -166,7 +196,7 @@ def convertFile(filename, indent=0, tugStack=[]):
             return errorElement(f"tugging {filename} from {tugStack[-1]} would cause recursion")
         
         if not tugStack:
-            uniqueCounter = 0
+            
             if(root == "html"):
                 output += "<!DOCTYPE html>\n"
                 output += "<!--  Created using YACHT -->\n"
