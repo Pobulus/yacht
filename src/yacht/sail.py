@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import time, sys, re, json
 import importlib
-from convert import convertFile
+from yaml.convert import convertFile
 
 def createYachtServer(rootPath, anchorModules):
     class YachtServer(BaseHTTPRequestHandler):
@@ -37,14 +37,14 @@ def createYachtServer(rootPath, anchorModules):
                 return YachtServer
             
         def do_GET(self):
-            items = self.path.split('/')
-            print(items)
-            if(len(items) == 4 and items[1] == 'anchor'):
-                self.send_response(200)
-                self.send_header("Content-type", "text/plain")
-                self.end_headers()
-                self.wfile.write(bytes(items[3], "utf-8"))
-                return YachtServer
+            # items = self.path.split('/')
+            # print(items)
+            # if(len(items) == 4 and items[1] == 'anchor'):
+            #     self.send_response(200)
+            #     self.send_header("Content-type", "text/plain")
+            #     self.end_headers()
+            #     self.wfile.write(bytes(items[3], "utf-8"))
+            #     return YachtServer
             path = rootPath+self.path;
             if path[-1] == '/':
                 path += 'index.yaml'

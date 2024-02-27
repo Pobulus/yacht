@@ -31,7 +31,7 @@ html:
           - b: clickme!
             class: gradient
             anchors:
-              - bind: anchors/time
+              - bind: example/time
                 trigger: onclick
                 target: innerText
                 arguments:
@@ -43,7 +43,7 @@ html:
             id: subtitle
             class: gradient
             anchors:
-                - bind: anchors/time
+                - bind: example/time
                   poll: yes
                   trigger: onclick
                   target: innerHTML

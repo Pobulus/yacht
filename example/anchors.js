@@ -22,7 +22,6 @@ class Anchor {
     }
 }
 class Anchors {
-
     anchors = [];
     pollingTargets = [];
     pollingDelay = 500;
@@ -48,15 +47,12 @@ class Anchors {
     startPolling() {
         this.pollingInterval = setInterval(function() {harbour.request()}, this.pollingDelay);
     }
-
-
 }
 
 var harbour = undefined;
 (function () {
     harbour = new Anchors();
     document.addEventListener("DOMContentLoaded", function(event) {
-        harbour.startPolling()
-    });
-    
+        harbour.startPolling();
+    }); 
 }())
