@@ -1,4 +1,12 @@
 style:
+  - "@keyframes wiggle": 
+    - 0%: 
+        - transform: translate(50%, 30%) rotate(-12deg) 
+    - 50%: 
+        - transform: translate(50%, 30%) rotate(5deg)
+    - 100%: 
+        - transform: translate(50%, 30%) rotate(-12deg) 
+
   - a:
     - text-decoration: none
   - body:
@@ -28,8 +36,12 @@ style:
   - "#title":
       - font-size: 100px
   - "#subtitle":
-      - font-size: 20px
-      - text-align: right
+      - font-size: 22px
+      - text-align: center
+      - transform: translate(50%, 30%) rotate(-12deg) 
+      - animation-name: wiggle
+      - animation-duration: 4s
+      - animation-iteration-count: infinite
   - "@media only screen and (orientation: portrait) and (max-width: 600px)":
       - "#title":
           - font-size: 50px

@@ -31,12 +31,15 @@ class Anchors {
         const anchor = new Anchor(document.getElementById(id), name, args, target)
         this.anchors.push(anchor);
         if (isPolling) this.pollingTargets.push(anchor);
-        console.log("new anchortrigger", trigger);
         if(trigger) {
-            const previousFunction = document.getElementById(id)[trigger];
-            document.getElementById(id)[trigger] = function() {
-                if(previousFunction) previousFunction();    
+            if(trigger === 'once'){
                 anchor.send();
+            }else {
+                const previousFunction = document.getElementById(id)[trigger];
+                document.getElementById(id)[trigger] = function() {
+                    if(previousFunction) previousFunction();    
+                    anchor.send();
+                }
             }
         }
     }

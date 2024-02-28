@@ -1,15 +1,24 @@
 from datetime import datetime
-import yacht.anchor as anchor
+from yacht.anchor import *
+import random
 
-
-
-@anchor.anchor
+@anchor
 def time(request):
     return datetime.now().strftime(anchor.getRequestBody(request).get('format', "%H:%M"))
 
-@anchor.anchor
+@anchor
 def printer(request): 
     print(request.headers)
     return str("clicked!")
 
+splashes = [
+    "Land ahoy!",
+    "Drop the anchor!",
+    "Set sail!",
+    "All aboard!"
+]
+
+@anchor
+def splash(req):
+    return(random.sample(splashes, 1)[0])
 
