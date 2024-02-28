@@ -77,7 +77,8 @@ def parseAnchor(obj, indent, id):
             target = anchor.get('target', "")
             poll = 'true' if anchor.get('poll', False) else 'false'
             trigger = anchor.get('trigger', "")
-            output += f"\n{' '*indent}<script>harbour.bindAnchor(\"{id}\", \"{anchor['bind']}\", {arguments}, \"{target}\", {poll}, \"{trigger}\" );</script>"
+            redirect = anchor.get('redirect', "")
+            output += f"\n{' '*indent}<script>harbour.bindAnchor(\"{id}\", \"{anchor['bind']}\", {arguments}, \"{target}\", {poll}, \"{trigger}\", \"{redirect}\" );</script>"
     return output
 def parseHTMLObj(obj, indent, tugStack=[]):
     output = ""
