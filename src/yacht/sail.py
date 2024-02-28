@@ -4,7 +4,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import time, sys, re, json, os
 import importlib, importlib.util
 from yacht.convert import convertFile
-import anchor
+import yacht.anchor
 def createYachtServer(anchorModules):
     class YachtServer(BaseHTTPRequestHandler):
         def detectContentType(self, path):

@@ -1,18 +1,15 @@
 from datetime import datetime
-import anchor 
+import yacht.anchor as anchor
 
 
 
-@anchor._anchor
+@anchor.anchor
 def time(request):
     return datetime.now().strftime(anchor.getRequestBody(request).get('format', "%H:%M"))
 
-@anchor._anchor
+@anchor.anchor
 def printer(request): 
     print(request.headers)
     return str("clicked!")
-# anchors = {
-#     "time": time, 
-#     "print":printer
-# }
+
 

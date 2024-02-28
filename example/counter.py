@@ -1,9 +1,9 @@
-from anchor import _anchor, getCookie, setCookie, SimpleCookie
+from yacht.anchor import *
 
 anchors = {}
 _COUNTER = 0
 
-@_anchor
+@anchor
 def get(req):
     testCookie = getCookie(req)
     print("test cookie")
@@ -13,13 +13,13 @@ def get(req):
 
     return str(_COUNTER)
 
-@_anchor
+@anchor
 def increment(req):
     global _COUNTER
     _COUNTER += 1
     return str(_COUNTER)
 
-@_anchor
+@anchor
 def decrement(req):
     global _COUNTER
     _COUNTER -= 1

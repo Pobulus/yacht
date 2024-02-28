@@ -16,7 +16,7 @@ def setCookie(request, cookie):
     for morsel in cookie.values():
         request.send_header("Set-Cookie", morsel.OutputString())
 
-def _anchor(func):
+def anchor(func):
     @functools.wraps(func)
     def auto_func(req):
         return func(req)
@@ -29,4 +29,16 @@ def _anchor(func):
     return auto_func
 
 if __name__ == "__main__":
-    print()
+    helpMessage = """
+        This module shouldn't be run
+
+        import it into your module like:
+
+        from yacht.anchor import *
+
+        then use @anchor before any function to make it accessible from yacht generated pages
+        place your module .py scirpt in the root directory of your page and import it when launching yacht sail 
+        by passing it's name in the list after -m 
+    """
+    print(helpMessage)
+    
