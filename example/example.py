@@ -8,7 +8,7 @@ def time(request):
 
 @anchor
 def printer(request): 
-    print(request.headers)
+    print(getRequestBody(request).get("attributes", {}))
     return str("clicked!")
 
 splashes = [

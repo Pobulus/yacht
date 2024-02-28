@@ -10,7 +10,10 @@ class Anchor {
         const xhr = new XMLHttpRequest();
         console.log(`http://${window.location.host}/anchor/${this.name}`)
         xhr.open("POST", `http://${window.location.host}/anchor/${this.name}`);
-        xhr.send(JSON.stringify(this.args));
+        xhr.send(JSON.stringify({
+            value: this.element.value,
+            args: this.args
+        }));
         xhr.responseType = "text";
         xhr.onload = () => {
             if (xhr.readyState == 4 && xhr.status == 200) {

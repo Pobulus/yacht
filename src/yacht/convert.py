@@ -63,6 +63,7 @@ def tugFile(obj, indent, tugStack):
         output = output.replace(f"${token}", obj[token])
         token = next(objIterator, None)
     output = output.replace(f" id=\"", f" id=\"{tugID}_")
+    output = output.replace(f"bindAnchor(\"", f"bindAnchor(\"{tugID}_")
     output = re.sub(r"#(.+) {", fr"#{tugID}_\1 {{", output)
     
     return output
