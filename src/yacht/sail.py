@@ -1,9 +1,11 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import time, sys, re, json
-import importlib
-from yaml.convert import convertFile
 
-def createYachtServer(rootPath, anchorModules):
+
+import time, sys, re, json, os
+import importlib, importlib.util
+from yacht.convert import convertFile
+import anchor
+def createYachtServer(anchorModules):
     class YachtServer(BaseHTTPRequestHandler):
         def detectContentType(self, path):
             ext = re.search(f"\.([^.]+)$", path).group(1)
@@ -18,21 +20,22 @@ def createYachtServer(rootPath, anchorModules):
                 case _: 
                     return "text/plain"
         def do_POST(self):
-            print(f"POST req {self.path}")
             items = self.path.split('/')
             
             if(len(items) == 4 and items[1] == 'anchor'):
                 self.send_response(200)
                 self.send_header("Content-type", "text/plain")
-                self.end_headers()
+                
                 
                 response = ""
                 moduleName = items[2]
                 anchorName = items[3]
-                try:
-                    response = anchorModules[moduleName].anchors.get(anchorName, lambda: f"{anchorName} not found")(self)
+                try:   
+                    response = anchorModules[moduleName].get(anchorName, lambda n: f"{moduleName}:{anchorName} not found")(self)
+                    # the anchor can modify headers to alter cookies
                 except KeyError:
                     response = f"no such module {moduleName}"
+                self.end_headers() 
                 self.wfile.write(bytes(response, "utf-8"))
                 return YachtServer
             
@@ -45,7 +48,7 @@ def createYachtServer(rootPath, anchorModules):
             #     self.end_headers()
             #     self.wfile.write(bytes(items[3], "utf-8"))
             #     return YachtServer
-            path = rootPath+self.path;
+            path = "."+self.path;
             if path[-1] == '/':
                 path += 'index.yaml'
             print(f"serving file {path}")
@@ -75,8 +78,7 @@ def startServer(args):
     
     serverAddress = "localhost"
     serverPort = 55555
-    rootPath = "."
-    anchorModules = {}
+
     
     if len(args):
         print(args)
@@ -91,21 +93,33 @@ def startServer(args):
                                 print(f"{args[index+1]} is not a valid port number")
                         case "-r":
                             rootPath = args[index+1]
+                            os.chdir(rootPath)
+                            sys.path.append(rootPath)
+                            print(sys.path)
                         case "-a":
                             serverAddress = args[index+1]
                         case "-m":
                             moduleNames = args[index+1].split(',')
                             for name in moduleNames:
                                 try:
-                                    anchorModules[name] = importlib.import_module(name, 'anchors')
+                                    spec = importlib.util.spec_from_file_location(name, f"{os.getcwd()}/{name}.py")
+                                    mod = importlib.util.module_from_spec(spec)
+                                    spec.loader.exec_module(mod)
+                                    print(f" ✅ Successfully loaded [{name}]:")
+                                    for anch in anchor._anchorModules[name].keys():
+                                        print(f" ⚓  {name}/{anch}")
+
                                 except ModuleNotFoundError:
+                                    print(f" ❌ error loading [{name}]")
                                     print(f"No such module {name}")
-                                    quit()
+                                except FileNotFoundError:
+                                    print(f" ❌ error loading [{name}]")
+                                    print(f"    No such file: {os.getcwd()}/{name}.py")
                         case _:
                             print(f"Unknown parameter {arg}")
                 except IndexError:
                     print(f"missing value for parameter {arg}")
-    webServer = HTTPServer((serverAddress, serverPort), createYachtServer(rootPath, anchorModules))
+    webServer = HTTPServer((serverAddress, serverPort), createYachtServer(anchor._anchorModules))
     print("Server started http://%s:%s" % (serverAddress, serverPort))
 
     try:

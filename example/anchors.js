@@ -8,7 +8,8 @@ class Anchor {
     }       
     send() {
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", `${window.location.href}anchor/${this.name}`);
+        console.log(`http://${window.location.host}/anchor/${this.name}`)
+        xhr.open("POST", `http://${window.location.host}/anchor/${this.name}`);
         xhr.send(JSON.stringify(this.args));
         xhr.responseType = "text";
         xhr.onload = () => {

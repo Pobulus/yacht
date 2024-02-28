@@ -1,0 +1,23 @@
+html:
+    - body:
+        - script: anchors.js
+        - h1: counter!
+        
+        - button: SUB
+          anchors:
+            - bind: counter/decrement
+              trigger: onclick       
+        - h2: 'null'
+          anchors:
+            - bind: counter/get
+              poll: yes
+              target: innerHTML               
+        - button: ADD
+          anchors:
+            - bind: counter/increment
+              trigger: onclick
+
+          
+
+
+              

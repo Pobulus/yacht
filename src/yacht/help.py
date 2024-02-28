@@ -6,7 +6,10 @@ def describe(topic):
             print("available parameters are:")
             print(" ☸  -a ADDR     address for the server")
             print(" ☸  -p PORT     port which the server should be opened")
-            print(" ☸  -r PATH     path to your server's root directory, by default it's the current path")
+            print(" ☸  -r PATH     path to your server's root directory")
+            print(" ☸  -m MOD1[,MOD2[...]]")
+            print("         list of modules with anchors to load")
+            print("         they should be .py files in root directory of your website")
         case "convert":
             print("convert a given yaml into html and print the results to stdout")
 
@@ -22,5 +25,6 @@ if __name__ == "__main__":
         print("available topics are:")
         print(" ☸  sail")
         print(" ☸  convert")
+        print(" ☸  anchor")
         
         

@@ -31,7 +31,8 @@ html:
           - b: clickme!
             class: gradient
             anchors:
-              - bind: example/time
+            # this has to be fixed, we don't want anchor names to be shared between modules
+              - bind: example/printer
                 trigger: onclick
                 target: innerText
                 arguments:
