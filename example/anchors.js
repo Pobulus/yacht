@@ -1,18 +1,16 @@
-
 class Anchor {
     constructor(element, name, args, target){
         this.element = element;
         this.name = name;
         this.args = args;
         this.target = target;
-        this.redirect = undefined
+        this.redirect = undefined;
     }      
     addRedirect(href) {
-        this.redirect = href
+        this.redirect = href;
     }
     send() {
         const xhr = new XMLHttpRequest();
-        console.log(`http://${window.location.host}/anchor/${this.name}`)
         xhr.open("POST", `http://${window.location.host}/anchor/${this.name}`);
         xhr.send(JSON.stringify({
             value: this.element.value,
@@ -22,10 +20,10 @@ class Anchor {
         xhr.onload = () => {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 if (xhr.responseText) {
-                    if(this.target === 'href') window.location.href = xhr.responseText
-                    else if(this.target === 'redirect') window.location.replace(xhr.responseText)
+                    if(this.target === 'href'){window.location.href = xhr.responseText;}
+                    else{if(this.target === 'redirect'){window.location.replace(xhr.responseText);}}
                 }
-                if(this.target) this.element[this.target] = xhr.responseText;
+                if(this.target){this.element[this.target] = xhr.responseText;}
             } else {
                 console.log(`Error: ${xhr.status}`);
                 console.log(`happended on anchor: ${this}`);
@@ -38,15 +36,15 @@ class Anchors {
     pollingTargets = [];
     pollingDelay = 500;
     pollingInterval = null;
-    bindAnchor(id, name, args, target, isPolling, trigger, redirect) {
-        const anchor = new Anchor(document.getElementById(id), name, args, target)
+    bindAnchor(id, name, args, target, trigger, redirect) {
+        const anchor = new Anchor(document.getElementById(id), name, args, target);
         this.anchors.push(anchor);
-        if (isPolling) this.pollingTargets.push(anchor);
+        if (trigger === 'always') {this.pollingTargets.push(anchor);}
         if(redirect) {
-            anchor.addRedirect(redirect)
+            anchor.addRedirect(redirect);
         }
         if(trigger) {
-            if(trigger === 'once'){
+            if(trigger === 'once' || trigger === 'always'){
                 anchor.send();
             }else {
                 const previousFunction = document.getElementById(id)[trigger];
@@ -63,7 +61,8 @@ class Anchors {
         });
     }
     startPolling() {
-        this.pollingInterval = setInterval(function() {harbour.request()}, this.pollingDelay);
+        clearInterval(this.pollingInterval);
+        this.pollingInterval = setInterval(function() {harbour.request();}, this.pollingDelay);
     }
 }
 

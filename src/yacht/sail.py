@@ -1,6 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-
 import time, sys, re, json, os
 import importlib, importlib.util
 from yacht.convert import convertFile
@@ -60,6 +59,13 @@ def createYachtServer(anchorModules):
                 
 
             except FileNotFoundError:
+                if(path == "./anchors.js"):
+                    #  if a version of anchors.js was not provided, send a builtin one
+                    self.send_response(200)
+                    self.send_header("Content-type", "text/plain")
+                    self.end_headers()
+                    self.wfile.write(bytes(yacht.anchor._anchorsJS, "utf-8"))
+                    return YachtServer
                 print('File does not exist')
                 self.send_response(404)
                 self.send_header("Content-type", "text/html")
