@@ -64,7 +64,7 @@ def createYachtServer(anchorModules):
                     self.send_response(200)
                     self.send_header("Content-type", "text/plain")
                     self.end_headers()
-                    self.wfile.write(bytes(yacht.anchor._anchorsJS, "utf-8"))
+                    self.wfile.write(bytes(yacht.anchor.anchorsJS, "utf-8"))
                     return YachtServer
                 print('File does not exist')
                 self.send_response(404)
