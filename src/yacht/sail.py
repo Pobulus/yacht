@@ -40,14 +40,6 @@ def createYachtServer(anchorModules):
                 return YachtServer
             
         def do_GET(self):
-            # items = self.path.split('/')
-            # print(items)
-            # if(len(items) == 4 and items[1] == 'anchor'):
-            #     self.send_response(200)
-            #     self.send_header("Content-type", "text/plain")
-            #     self.end_headers()
-            #     self.wfile.write(bytes(items[3], "utf-8"))
-            #     return YachtServer
             path = "."+self.path;
             if path[-1] == '/':
                 path += 'index.yaml'
@@ -106,7 +98,7 @@ def startServer(args):
                                     mod = importlib.util.module_from_spec(spec)
                                     spec.loader.exec_module(mod)
                                     print(f" ✅ Successfully loaded [{name}]:")
-                                    for anch in anchor._anchorModules[name].keys():
+                                    for anch in yacht.anchor._anchorModules[name].keys():
                                         print(f" ⚓  {name}/{anch}")
 
                                 except ModuleNotFoundError:
@@ -119,7 +111,7 @@ def startServer(args):
                             print(f"Unknown parameter {arg}")
                 except IndexError:
                     print(f"missing value for parameter {arg}")
-    webServer = HTTPServer((serverAddress, serverPort), createYachtServer(anchor._anchorModules))
+    webServer = HTTPServer((serverAddress, serverPort), createYachtServer(yacht.anchor._anchorModules))
     print("Server started http://%s:%s" % (serverAddress, serverPort))
 
     try:
