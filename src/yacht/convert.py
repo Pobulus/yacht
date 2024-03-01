@@ -116,8 +116,9 @@ def parseHTMLObj(obj, indent, tugStack=[]):
 
     attrTemp = next(objIterator, None)
 
-    while attrTemp is not None and attrTemp != "anchors":
-        output += f" {attrTemp}=\"{obj[attrTemp]}\""
+    while attrTemp is not None:
+        if attrTemp != "anchors":
+            output += f" {attrTemp}=\"{obj[attrTemp]}\""
         attrTemp = next(objIterator, None)
     if tag in emptyElementTags:
         output += " />"

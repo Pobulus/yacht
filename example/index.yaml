@@ -30,10 +30,11 @@ html:
       - a:
           - b: clickme!
             class: gradient
+            id: boobs
             anchors:
             # this has to be fixed, we don't want anchor names to be shared between modules
-              - bind: example/printer
-                trigger: onclick
+              - bind: example/time
+                trigger: once
                 target: innerText
                 arguments:
                   format: 'Today is %d-%m-%y'
