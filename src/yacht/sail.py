@@ -50,7 +50,8 @@ def createYachtServer(anchorModules):
                 self.wfile.write(bytes(f"<html><body><h1>403</h1><hr/><h3>You don't have permission to view {path}</h3></body></html>", "utf-8"))
                 return YachtServer  
             try:
-                document = convertFile(path,0,[]) if re.search(r"\.ya..?$", path) else open(path).read()
+                document = convertFile(path) if re.search(r"\.ya..?$", path) else open(path).read()
+                print(document)
                 self.send_response(200)
                 self.send_header("Content-type", self.detectContentType(path))
                 self.end_headers()

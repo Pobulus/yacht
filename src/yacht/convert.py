@@ -213,7 +213,7 @@ def parseFile(file, indent=0, tugStack=[]):
             output += "<!--  Created using YACHT -->\n"
             output += "<!-- Have a very nice day! -->\n"
             output += parseHTMLObj(data, indent, tugStack)
-        elif(root == "style" and not len(tugStack)):
+        elif(root == "style"):
             output += "/*  Created using YACHT */\n"
             output += "/* Have a very nice day! */\n"
             for child in data["style"]:
