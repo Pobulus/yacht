@@ -67,7 +67,11 @@ def tugFile(obj, indent, tugStack):
             file = file.replace(f"${token}", obj[token])
             token = next(objIterator, None)
         file = re.sub(r"id: *('?)(\w+)", fr"id: \1{tugID}_\2", file)
-        file = re.sub(r"#(.+) {", fr"#{tugID}_\1 {{", file)
+        
+        print(file)
+        print("subbed")
+        file = re.sub(r"#(.+)", fr"#{tugID}_\1", file)
+        print(file)
         output = parseFile(file, indent+indentSpaces, tugStack)
     except FileNotFoundError:
         tugStack.pop()
