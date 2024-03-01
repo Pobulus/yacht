@@ -40,6 +40,13 @@ html:
           - b: 'yacht⛵'
             id: title
             class: gradient
+            anchors: # BOOM! more anchors!
+              - bind: example/time
+                trigger: chain
+                target: innerHTML     
+                arguments:
+                  name: Steve 
+                  # give them a matchin' name
           - i: "..."
             id: subtitle
             class: gradient
@@ -50,4 +57,10 @@ html:
             
         class: centered
         id: title-bg
+        anchors:
+          - bind: example/time
+            trigger: onclick
+            arguments:
+              name: Steve
+              format: '%H : %M : %S'
         # href: https://github.com/Pobulus/yacht

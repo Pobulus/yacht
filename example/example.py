@@ -4,7 +4,7 @@ import random
 
 @anchor
 def time(request):
-    return datetime.now().strftime(anchor.getRequestBody(request).get('format', "%H:%M"))
+    return datetime.now().strftime(getRequestBody(request).get("arguments",{}).get('format', "%H:%M"))
 
 @anchor
 def printer(request): 

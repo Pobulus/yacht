@@ -73,7 +73,7 @@ def parseAnchor(obj, indent, id):
         print(obj)
         for anchor in obj:
     # bindAnchor(id, name, args, target, isPolling)
-            arguments = str(anchor.get('arguments', "null")).replace("'", '"')
+            arguments = json.dumps(anchor.get('arguments', None))
             target = anchor.get('target', "")
             trigger = anchor.get('trigger', "")
             output += f"\n{' '*indent}<script>harbour.bindAnchor(\"{id}\", \"{anchor['bind']}\", {arguments}, \"{target}\", \"{trigger}\");</script>"
