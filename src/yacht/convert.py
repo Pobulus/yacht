@@ -55,7 +55,6 @@ def tugFile(obj, indent, tugStack):
     objIterator = iter(obj)
     next(objIterator)
     filename =  obj["tug"]
-    print(tugStack)
     if filename in tugStack:
         return errorElement(f"tugging {filename} from {tugStack[-1]} would cause recursion")    
     tugStack.append(filename)
@@ -68,10 +67,9 @@ def tugFile(obj, indent, tugStack):
             token = next(objIterator, None)
         file = re.sub(r"id: *('?)(\w+)", fr"id: \1{tugID}_\2", file)
         
-        print(file)
-        print("subbed")
+        
         file = re.sub(r"#(.+)", fr"#{tugID}_\1", file)
-        print(file)
+        
         output = parseFile(file, indent+indentSpaces, tugStack)
     except FileNotFoundError:
         tugStack.pop()
