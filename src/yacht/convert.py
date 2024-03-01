@@ -68,7 +68,7 @@ def tugFile(obj, indent, tugStack):
             token = next(objIterator, None)
         file = re.sub(r"id: *('?)(\w+)", fr"id: \1{tugID}_\2", file)
         
-        output = convertFile(file, indent+indentSpaces, tugStack)
+        output = parseFile(file, indent+indentSpaces, tugStack)
     except FileNotFoundError:
         tugStack.pop()
         return errorElement(f"file {obj['tug']} was not found")
@@ -198,7 +198,9 @@ def loadFile(filename):
 
 
 
-def convertFile(file, indent=0, tugStack=[]):
+
+
+def parseFile(file, indent=0, tugStack=[]):
     output = ""
     
     data = load(file, Loader=Loader)
@@ -224,9 +226,12 @@ def convertFile(file, indent=0, tugStack=[]):
     
     return output;
 
+def convertFile(filename, indent=0):
+    file = loadFile(filename)
+    return parseFile(file, 0, [filename])
+
 
 if __name__ == "__main__":
     filename = sys.argv[1] if len(sys.argv)>1 else "input.yaml" 
-    file = loadFile(filename)
-    print(convertFile(file, 0, [filename]))
+    print(convertFile(filename))
     
