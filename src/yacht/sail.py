@@ -51,7 +51,7 @@ def createYachtServer(anchorModules):
                 return YachtServer  
             try:
                 document = convertFile(path) if re.search(r"\.ya..?$", path) else open(path).read()
-                print(document)
+                
                 self.send_response(200)
                 self.send_header("Content-type", self.detectContentType(path))
                 self.end_headers()
@@ -63,7 +63,7 @@ def createYachtServer(anchorModules):
                 if(path == "./anchors.js"):
                     #  if a version of anchors.js was not provided, send a builtin one
                     self.send_response(200)
-                    self.send_header("Content-type", "text/plain")
+                    self.send_header("Content-type", "text/javascript")
                     self.end_headers()
                     self.wfile.write(bytes(yacht.anchor.anchorsJS, "utf-8"))
                     return YachtServer
@@ -80,7 +80,6 @@ def startServer(args):
 
     
     if len(args):
-        print(args)
         for index, arg in enumerate(args):
             if arg[0] == '-':
                 try:
@@ -94,7 +93,7 @@ def startServer(args):
                             rootPath = args[index+1]
                             os.chdir(rootPath)
                             sys.path.append(rootPath)
-                            print(sys.path)
+                            print(f"serving from {sys.path}")
                         case "-a":
                             serverAddress = args[index+1]
                         case "-m":
