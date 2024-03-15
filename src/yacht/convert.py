@@ -33,7 +33,7 @@ emptyElementTags = [
 
 def uniqueID(prefix):
     return prefix+str(uuid.uuid4())[0:4]
-    
+    # TODO handle TUGs 
 def craftHTML(obj, indent):
 
     repeat = obj.get("repeat", 1)
@@ -194,7 +194,6 @@ def errorElement(message):
     return f"<b style=\"color:red\">Error:{message}</b>"
 
 def loadFile(filename):
-    print(f"loading file {filename}")
     with open(filename, 'rt', encoding='utf8') as file:
         return file.read()
     

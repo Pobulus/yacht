@@ -1,4 +1,6 @@
 html:
+    - head: 
+
     - body:
         - script: anchors.js
         - script: |-
@@ -13,12 +15,21 @@ html:
         - h2: 'null'
           anchors:
             - bind: counter/get
-              trigger: always
+              trigger: once
               target: innerHTML               
         - button: ADD
           anchors:
             - bind: counter/increment
               trigger: onclick
+        - table:
+          - craft:
+            - tr:
+              - craft:
+                - td: $x-$y|
+                repeat: 15
+                index: $y
+            repeat: 5
+            index: $x
 
           
 

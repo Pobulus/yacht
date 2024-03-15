@@ -2,13 +2,17 @@
 html:
   - head:
       - title: Welcome aboard!
+
       - meta:
         content: text/html;charset=utf-8
         http-equiv: Content-Type
+
       - meta:
         content: utf-8
         http-equiv: encoding
       - style: style.yass
+      
+
   - body:
       - script: anchors.js
       - tug: nameCard.yaml
@@ -30,9 +34,8 @@ html:
       - a:
           - b: clickme!
             class: gradient
-            id: boobs
+            id: cool-id
             anchors:
-            # this has to be fixed, we don't want anchor names to be shared between modules
               - bind: example/time
                 trigger: once
                 target: innerText
@@ -47,6 +50,8 @@ html:
                 target: innerHTML     
                 arguments:
                   name: Steve 
+
+                    
                   # give them a matchin' name
           - i: "..."
             id: subtitle
@@ -58,9 +63,13 @@ html:
             
         class: centered
         id: title-bg
+         
+
         anchors:
           - bind: example/time
             trigger: onclick
+            target: 
+              - id: $
             arguments:
               name: Steve
               format: '%H : %M : %S'
