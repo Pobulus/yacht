@@ -91,6 +91,15 @@ class Harbour {
       harbour.request();
     }, this.pollingDelay);
   }
+  craft(id, template, objects) {
+    document.getElementById(id).outerHTML = objects.map(o => {
+        out = template;
+        Object.keys(o).forEach(k => {
+            out = out.replaceAll(`\$${k}`, o[k]);
+        });
+        return out;
+    }).join('\n');
+  }
 }
 
 (function () {
